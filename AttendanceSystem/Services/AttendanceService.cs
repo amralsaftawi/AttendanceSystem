@@ -68,7 +68,7 @@ namespace AttendanceSystem.Services
         }
 
 
-        public static string AttendanceRegistration(string NFC_Tag)
+        public static bool AttendanceRegistration(string NFC_Tag)
         {
             using var context = new AppDbContext();
             var now = DateTime.Now;
@@ -76,42 +76,49 @@ namespace AttendanceSystem.Services
             var student = GetStudentByNfc(NFC_Tag, context);
             if (student == null)
             {
-                return "Invalid NFC Tag.";
+                return false;
+               // return "Invalid NFC Tag.";
                 
             }
 
             var lectures = GetOngoingLectures(now, context);
             if (!lectures.Any())
             {
-                return "No Ongoing lectures.";
+                return false;
+                // return "No Ongoing lectures.";
             }
 
             var validLecture = GetValidLectureForStudent(lectures, student.Level, context);
             if (validLecture == null)
             {
-                return"No matching lecture for level.";
+                return false;
+                // return"No matching lecture for level.";
             }
 
             if (!IsLectureOpen(validLecture.ID, context))
             {
-                return "Lecture is closed.";
+                return false;
+                // return "Lecture is closed.";
 
             }
 
             if (!IsStudentEnrolled(student.ID, validLecture.CourseID, context))
             {
-                return "Student not enrolled.";
+                return false;
+                // return "Student not enrolled.";
             }
 
             if (IsAttendanceAlreadyRecorded(student.ID, validLecture.ID, context))
             {
-              return "Already registered.";
-              
+                return false;
+                // return "Already registered.";
+
             }
 
             SaveAttendance(student.ID, validLecture.ID, now, context);
 
-            return " Attendance saved successfully.";
+            return true;
+            // return " Attendance saved successfully.";
         }
 
 
