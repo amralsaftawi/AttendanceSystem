@@ -1,4 +1,5 @@
 ﻿using AttendanceSystem.Entites;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace AttendanceSystem.Data
@@ -24,11 +25,14 @@ namespace AttendanceSystem.Data
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var ConnectionString = Configration.GetSection("Const");
+            
+            var envname = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"); 
+
+            var ConnectionString = Configration.GetSection(envname=="Development"?"Const Dev" : "Const Prod");
 
             optionsBuilder.UseSqlite(ConnectionString.Value);
 
-
+          
 
         }
     }
