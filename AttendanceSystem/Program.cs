@@ -13,7 +13,7 @@ namespace AttendanceSystem
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            object value = builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 

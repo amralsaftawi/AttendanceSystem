@@ -26,7 +26,10 @@ namespace AttendanceSystem.Data
 
             var ConnectionString = Configration.GetSection("Const");
 
-            optionsBuilder.UseSqlServer(ConnectionString.Value);
+            optionsBuilder.UseSqlite(ConnectionString.Value);
+
+
+
         }
     }
 }
