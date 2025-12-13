@@ -9,6 +9,8 @@ namespace AttendanceSystem
     {
         public static void Main(string[] args)
         {
+
+            Console.WriteLine("DB Path: " + Path.GetFullPath("attendance.db"));
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
@@ -28,8 +30,7 @@ namespace AttendanceSystem
 
             app.Run();
 
-
-
+ 
 
         }
     }
