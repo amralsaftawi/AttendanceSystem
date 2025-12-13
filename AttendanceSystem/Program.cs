@@ -25,7 +25,7 @@ namespace AttendanceSystem
             if (!File.Exists(Path.GetFullPath("attendance.db")))
             {
                 Console.WriteLine($"Creating SQLite database at {Path.GetFullPath("attendance.db")}");
-
+                
                 var schemaSql = File.ReadAllText("schema.sql");
 
                 using var conn = new SqliteConnection("DataSource=/app/data/attendance.db;");
