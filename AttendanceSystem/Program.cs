@@ -21,6 +21,60 @@ namespace AttendanceSystem
             object value = builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            // Ensure folder exists
+            var dbPath = Path.GetFullPath("attendance.db");
+            var dir = Path.GetDirectoryName(dbPath);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
+
+            // Create DB and tables if missing
+            if (!File.Exists(dbPath))
+            {
+                Console.WriteLine($"Creating SQLite DB at {dbPath}");
+                using var conn = new SqliteConnection("DataSource=/app/data/attendance.db");
+                conn.Open();
+
+                // Read schema.sql
+                var schemaSql = File.ReadAllText("schema.sql");
+
+                // Execute each command separately
+                foreach (var cmdText in schemaSql.Split(';'))
+                {
+                    var trimmed = cmdText.Trim();
+                    if (!string.IsNullOrEmpty(trimmed))
+                    {
+                        using var cmd = conn.CreateCommand();
+                        cmd.CommandText = trimmed;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }";
+            var dir = Path.GetDirectoryName(dbPath);
+            if (!string.IsNullOrEmpty(dir))
+                Directory.CreateDirectory(dir);
+
+            // Create DB and tables if missing
+            if (!File.Exists(dbPath))
+            {
+                Console.WriteLine($"Creating SQLite DB at {dbPath}");
+                using var conn = new SqliteConnection(connString);
+                conn.Open();
+
+                // Read schema.sql
+                var schemaSql = File.ReadAllText("schema.sql");
+
+                // Execute each command separately
+                foreach (var cmdText in schemaSql.Split(';'))
+                {
+                    var trimmed = cmdText.Trim();
+                    if (!string.IsNullOrEmpty(trimmed))
+                    {
+                        using var cmd = conn.CreateCommand();
+                        cmd.CommandText = trimmed;
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
 
             if (!File.Exists(Path.GetFullPath("attendance.db")))
             {
@@ -46,8 +100,6 @@ namespace AttendanceSystem
             app.MapControllers();
 
             app.Run();
-
- 
 
         }
     }
